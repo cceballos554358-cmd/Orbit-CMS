@@ -11,8 +11,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-    $middleware->trustProxies(at: '*');
-})
+        
+        // 1. Keep your custom Role middleware for the CMS
+        $middleware->alias([
+            'role' => \App\Http\Middleware\RoleMiddleware::class,
+        ]);
+
+        // 2. Trust Render's secure connection for the login fix
+        $middleware->trustProxies(at: '*');
+        
+    })
 
     ->withExceptions(function (Exceptions $exceptions): void {
         //
